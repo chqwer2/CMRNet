@@ -6,11 +6,12 @@
 # http://creativecommons.org/licenses/by-nc-sa/4.0/
 # -------------------------------------------------------------------
 import math
+import torch
+import torch.nn.functional as F
 
 import mathutils
 import numpy as np
-import torch
-import torch.nn.functional as F
+
 from matplotlib import cm
 from torch.utils.data.dataloader import default_collate
 

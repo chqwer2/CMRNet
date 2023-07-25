@@ -45,9 +45,11 @@ class CameraModel:
 
     def get_matrix(self):
         matrix = np.zeros([3, 3])
+
         matrix[0, 0] = self.focal_length[0]
         matrix[1, 1] = self.focal_length[1]
         matrix[0, 2] = self.principal_point[0]
         matrix[1, 2] = self.principal_point[1]
         matrix[2, 2] = 1.0
+
         return matrix

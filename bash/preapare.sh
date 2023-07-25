@@ -1,0 +1,21 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+python preprocess/kitti_maps.py --sequence 00 --kitti_folder  ../kitti/dataset
+
+
+
+
+
+
+

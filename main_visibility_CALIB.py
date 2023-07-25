@@ -21,6 +21,9 @@ import torch.utils.data
 import visibility
 from sacred import Experiment, SETTINGS
 from sacred.utils import apply_backspaces_and_linefeeds
+from sacred import SETTINGS
+SETTINGS.CONFIG.READ_ONLY_CONFIG = False
+
 
 from camera_model import CameraModel
 from DatasetVisibilityKitti import DatasetVisibilityKittiSingle

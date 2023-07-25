@@ -37,14 +37,17 @@ class CMRNet(nn.Module):
     def __init__(self, image_size, use_feat_from=1, md=4, use_reflectance=False, dropout=0.0):
         """
         input: md --- maximum displacement (for correlation. default: 4), after warpping
-
         """
+
         super(CMRNet, self).__init__()
         input_lidar = 1
         self.use_feat_from = use_feat_from
+        print("use_feat_from:", use_feat_from)
+
         if use_reflectance:
             input_lidar = 2
 
+        # For Camera
         self.conv1a = conv(3, 16, kernel_size=3, stride=2)
         self.conv1aa = conv(16, 16, kernel_size=3, stride=1)
         self.conv1b = conv(16, 16, kernel_size=3, stride=1)
@@ -64,6 +67,7 @@ class CMRNet(nn.Module):
         self.conv6a = conv(196, 196, kernel_size=3, stride=1)
         self.conv6b = conv(196, 196, kernel_size=3, stride=1)
 
+        # For Lidar
         self.lconv1a = conv(input_lidar, 16, kernel_size=3, stride=2)
         self.lconv1aa = conv(16, 16, kernel_size=3, stride=1)
         self.lconv1b = conv(16, 16, kernel_size=3, stride=1)
@@ -82,6 +86,7 @@ class CMRNet(nn.Module):
         self.lconv6aa = conv(128, 196, kernel_size=3, stride=2)
         self.lconv6a = conv(196, 196, kernel_size=3, stride=1)
         self.lconv6b = conv(196, 196, kernel_size=3, stride=1)
+
 
         self.corr = Correlation(pad_size=md, kernel_size=1, max_displacement=md, stride1=1, stride2=1, corr_multiply=1)
         self.leakyRELU = nn.LeakyReLU(0.1)
@@ -190,6 +195,7 @@ class CMRNet(nn.Module):
         flo: [B, 2, H, W] flow
 
         """
+
         B, C, H, W = x.size()
         # mesh grid
         xx = torch.arange(0, W).view(1, -1).repeat(H, 1)
@@ -231,6 +237,9 @@ class CMRNet(nn.Module):
         # asd = overlay_imgs(rgb[0], lidar)
         # io.imshow(asd)
         # io.show()
+        print("rgb shape", rgb.shape)
+        print("lidar shape", lidar.shape)
+
 
         c11 = self.conv1b(self.conv1aa(self.conv1a(rgb)))
         c21 = self.lconv1b(self.lconv1aa(self.lconv1a(lidar)))
@@ -245,7 +254,7 @@ class CMRNet(nn.Module):
         c16 = self.conv6b(self.conv6a(self.conv6aa(c15)))
         c26 = self.lconv6b(self.lconv6a(self.lconv6aa(c25)))
 
-        corr6 = self.corr(c16, c26)
+        corr6 = self.corr(c16, c26)      # corr...
         corr6 = self.leakyRELU(corr6)
 
         x = torch.cat((self.conv6_0(corr6), corr6), 1)
@@ -253,6 +262,7 @@ class CMRNet(nn.Module):
         x = torch.cat((self.conv6_2(x), x), 1)
         x = torch.cat((self.conv6_3(x), x), 1)
         x = torch.cat((self.conv6_4(x), x), 1)
+
         if self.use_feat_from > 1:
             flow6 = self.predict_flow6(x)
             up_flow6 = self.deconv6(flow6)
@@ -260,6 +270,8 @@ class CMRNet(nn.Module):
 
             warp5 = self.warp(c25, up_flow6*0.625)
             corr5 = self.corr(c15, warp5)
+
+
             corr5 = self.leakyRELU(corr5)
             x = torch.cat((corr5, c15, up_flow6, up_feat6), 1)
             x = torch.cat((self.conv5_0(x), x), 1)
@@ -320,7 +332,10 @@ class CMRNet(nn.Module):
             x = self.dc_conv4(self.dc_conv3(self.dc_conv2(self.dc_conv1(x))))
             #flow2 = flow2 + self.dc_conv7(self.dc_conv6(self.dc_conv5(x)))
 
-        x = x.view(x.shape[0], -1)
+
+
+        x = x.view(x.shape[0], -1)  # flatten...
+
         x = self.dropout(x)
         x = self.leakyRELU(self.fc1(x))
 
@@ -328,6 +343,7 @@ class CMRNet(nn.Module):
         rot = self.leakyRELU(self.fc1_rot(x))
         transl = self.fc2_trasl(transl)
         rot = self.fc2_rot(rot)
+
         rot = F.normalize(rot, dim=1)
 
         return transl, rot
