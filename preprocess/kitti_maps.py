@@ -26,6 +26,7 @@ parser.add_argument('--sequence', default='00',
                     help='sequence')
 parser.add_argument('--device', default='cuda',
                     help='device')
+
 parser.add_argument('--voxel_size', default=0.1, type=float, help='Voxel Size')
 parser.add_argument('--start', default=0, help='Starting Frame')
 parser.add_argument('--end', default=100000, help='End Frame')
@@ -36,7 +37,11 @@ args = parser.parse_args()
 sequence = args.sequence
 print("Sequnce: ", sequence)
 velodyne_folder = os.path.join(args.kitti_folder, 'sequences', sequence, 'velodyne')
+
+
+
 pose_file = os.path.join('./data', f'kitti-{sequence}.csv')
+
 
 poses = []
 with open(pose_file, 'r') as f:
@@ -127,3 +132,4 @@ for i in tqdm(range(first_frame, last_frame)):
     with h5py.File(file, 'w') as hf:
         hf.create_dataset('PC', data=local_map.cpu().half(), compression='lzf', shuffle=True)
         hf.create_dataset('intensity', data=local_intensity.cpu().half(), compression='lzf', shuffle=True)
+

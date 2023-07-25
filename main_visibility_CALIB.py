@@ -32,6 +32,7 @@ from models.CMRNet.CMRNet import CMRNet
 from quaternion_distances import quaternion_distance
 from utils import merge_inputs, overlay_imgs, rotate_back
 
+
 torch.backends.cudnn.enabled = True
 torch.backends.cudnn.benchmark = True
 
