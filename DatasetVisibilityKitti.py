@@ -55,6 +55,7 @@ class DatasetVisibilityKittiSingle(Dataset):
         self.model = CameraModel()
         self.model.focal_length = [7.18856e+02, 7.18856e+02]
         self.model.principal_point = [6.071928e+02, 1.852157e+02]
+
         for dir in ['00', '03', '05', '06', '07', '08', '09']:
             self.GTs_R[dir] = []
             self.GTs_T[dir] = []
@@ -123,6 +124,7 @@ class DatasetVisibilityKittiSingle(Dataset):
         rgb = normalization(rgb)
         return rgb
 
+
     def __len__(self):
         return len(self.all_files)
 
@@ -176,6 +178,8 @@ class DatasetVisibilityKittiSingle(Dataset):
             T = mathutils.Vector((0., 0., 0.))
             pc_in = rotate_forward(pc_in, R, T)
 
+
+
         if self.split != 'test':
             max_angle = self.max_r
             rotz = np.random.uniform(-max_angle, max_angle) * (3.141592 / 180.0)
@@ -184,6 +188,9 @@ class DatasetVisibilityKittiSingle(Dataset):
             transl_x = np.random.uniform(-self.max_t, self.max_t)
             transl_y = np.random.uniform(-self.max_t, self.max_t)
             transl_z = np.random.uniform(-self.max_t, min(self.max_t, 1.))
+
+
+
         else:
             initial_RT = self.test_RT[idx]
             rotz = initial_RT[6]
@@ -204,6 +211,12 @@ class DatasetVisibilityKittiSingle(Dataset):
         calib = get_calib_kitti(int(run))
         if h_mirror:
             calib[2] = (img.shape[2] / 2)*2 - calib[2]
+
+
+        print("dataloader:")
+        print("pc_in.shape: ", pc_in.shape, pc_in.dtype, pc_in.max(), pc_in.min())
+        print("img.shape: ", img.shape, img.dtype, img.max(), img.min())
+
 
         if not self.use_reflectance:
             sample = {'rgb': img, 'point_cloud': pc_in, 'calib': calib,

@@ -101,6 +101,8 @@ class CMRNet(nn.Module):
         self.conv6_3 = conv(od + dd[2], 64, kernel_size=3, stride=1)
         self.conv6_4 = conv(od + dd[3], 32, kernel_size=3, stride=1)
 
+
+
         if use_feat_from > 1:
             self.predict_flow6 = predict_flow(od + dd[4])
             self.deconv6 = deconv(2, 2, kernel_size=4, stride=2, padding=1)
