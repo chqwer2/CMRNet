@@ -126,6 +126,7 @@ def test(model, rgb_img, refl_img, target_transl, target_rot, loss_fn, camera_mo
     total_rot_error = total_rot_error * 180. / math.pi
 
     transl_err = transl_err.cpu()  #.numpy()
+    target_transl = target_transl.cpu()  #.numpy()
 
     for j in range(rgb_img.shape[0]):
         total_trasl_error += torch.norm(target_transl[j] - transl_err[j]) * 100.
