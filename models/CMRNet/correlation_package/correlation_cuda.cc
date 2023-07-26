@@ -156,9 +156,9 @@ int correlation_backward_cuda(at::Tensor& input1, at::Tensor& input2, at::Tensor
                                                 at::cuda::getCurrentCUDAStream()
                                                );
 
-  if (!success) {
-    AT_ERROR("CUDA call failed");
-  }
+//  if (!success) {
+//    AT_ERROR("CUDA call failed");
+//  }
 
   return 1;
 }

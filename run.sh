@@ -2,12 +2,8 @@
 # python 3.7
 
 conda activate drive
-pip install sacred==0.7.3
 
-# pip install git+https://gitlab.com/m1lhaus/blender-mathutils.git
 
-# Correlation RuntimeError: CUDA call failed
-# Solved by  models/CMRNet/correlation_package/
 
 
 
