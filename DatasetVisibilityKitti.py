@@ -121,6 +121,9 @@ class DatasetVisibilityKittiSingle(Dataset):
             #io.show()
 
         rgb = to_tensor(rgb)
+
+        print("rgb max", rgb.max())
+
         rgb = normalization(rgb)
         return rgb
 
@@ -163,10 +166,11 @@ class DatasetVisibilityKittiSingle(Dataset):
             pc_in[1, :] *= -1
 
         img = Image.open(img_path)
-        img = np.asarray(img)
 
-        if img.max() > 1.:
-            img = img/ 255.
+        # img = np.asarray(img)
+
+        # if img.max() > 1.:
+        #     img = img/ 255.
 
 
         img_rotation = 0.
