@@ -125,7 +125,7 @@ class DatasetVisibilityKittiSingle(Dataset):
 
         # TODO add some noise
         # print("rgb max", rgb.max())
-        noise_level = 5
+        noise_level = 15
         noise = torch.tensor(np.random.normal(0, noise_level, rgb.size()), dtype=torch.float)
         rgb = torch.clip(rgb + noise, 0, 1)
 

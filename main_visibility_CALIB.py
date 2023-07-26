@@ -363,7 +363,7 @@ def main(_config, _run, seed):
 
 
             # TODO Add Noise
-            noise_level = 5
+            noise_level = 15
             noise = torch.tensor(np.random.normal(0, noise_level, lidar_input.size()), dtype=torch.float).cuda()
             lidar_input = torch.clip(lidar_input + noise, 0, 1)
 
