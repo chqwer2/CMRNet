@@ -213,9 +213,11 @@ class DatasetVisibilityKittiSingle(Dataset):
             calib[2] = (img.shape[2] / 2)*2 - calib[2]
 
 
-        print("dataloader:")
-        print("pc_in.shape: ", pc_in.shape, pc_in.dtype, pc_in.max(), pc_in.min())
-        print("img.shape: ", img.shape, img.dtype, img.max(), img.min())
+
+        #
+        # print("dataloader:")
+        # print("pc_in.shape: ", pc_in.shape, pc_in.dtype, pc_in.max(), pc_in.min())
+        # print("img.shape: ", img.shape, img.dtype, img.max(), img.min())
 
 
         if not self.use_reflectance:

@@ -298,6 +298,8 @@ def main(_config, _run, seed):
 
                 sample['point_cloud'][idx] = sample['point_cloud'][idx].cuda()
                 pc_rotated = sample['point_cloud'][idx].clone()
+
+
                 reflectance = None
                 if _config['use_reflectance']:
                     reflectance = sample['reflectance'][idx].cuda()
@@ -354,8 +356,15 @@ def main(_config, _run, seed):
                 rgb_input.append(rgb)
                 lidar_input.append(depth_img_no_occlusion)
 
+
+            # Ready for Input...
             lidar_input = torch.stack(lidar_input)
             rgb_input = torch.stack(rgb_input)
+
+            print("lidar_input.shape", lidar_input.shape, lidar_input.max(), lidar_input.min())
+            print("rgb_input.shape", rgb_input.shape, rgb_input.max(), rgb_input.min())
+
+
             end_preprocess = time.time()
             loss = train(model, optimizer, rgb_input, lidar_input, sample['tr_error'],
                          sample['rot_error'], loss_fn, sample['point_cloud'])

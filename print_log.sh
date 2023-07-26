@@ -1,5 +1,9 @@
 
 
+# Data loader
+pc_in.shape:  torch.Size([4, 713162]) torch.float32 tensor(84.4375) tensor(-25.0629)
+img.shape:  torch.Size([3, 370, 1226]) torch.float32 tensor(2.6400) tensor(-2.1179)
+
 
 
 # input
