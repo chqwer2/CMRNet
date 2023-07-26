@@ -254,13 +254,13 @@ class CMRNet(nn.Module):
         c16 = self.conv6b(self.conv6a(self.conv6aa(c15)))
         c26 = self.lconv6b(self.lconv6a(self.lconv6aa(c25)))
 
-        print("c16 shape", c16.shape)
-        print("c26 shape", c26.shape)
+        # print("c16 shape", c16.shape)
+        # print("c26 shape", c26.shape)
 
         corr6 = self.corr(c16, c26)      # corr...
         corr6 = self.leakyRELU(corr6)
 
-        print("corr6 shape", corr6.shape)
+        # print("corr6 shape", corr6.shape)
 
         x = torch.cat((self.conv6_0(corr6), corr6), 1)
         x = torch.cat((self.conv6_1(x), x), 1)
@@ -268,7 +268,7 @@ class CMRNet(nn.Module):
         x = torch.cat((self.conv6_3(x), x), 1)
         x = torch.cat((self.conv6_4(x), x), 1)
 
-        print("before use feat x shape", x.shape)
+        # print("before use feat x shape", x.shape)
         if self.use_feat_from > 1:
             flow6 = self.predict_flow6(x)
             up_flow6 = self.deconv6(flow6)
