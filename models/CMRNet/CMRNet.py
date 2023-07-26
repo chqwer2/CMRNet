@@ -345,6 +345,7 @@ class CMRNet(nn.Module):
         x = self.dropout(x)
         x = self.leakyRELU(self.fc1(x))
 
+
         transl = self.leakyRELU(self.fc1_trasl(x))
         rot = self.leakyRELU(self.fc1_rot(x))
         transl = self.fc2_trasl(transl)

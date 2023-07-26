@@ -422,8 +422,11 @@ def main(_config, _run, seed):
                 cam_model.principal_point = cam_params[2:]
                 uv, depth, _, refl = cam_model.project_pytorch(pc_rotated, real_shape, reflectance)
                 uv = uv.t().int()
+                uv = uv.contiguous()
+
                 depth_img = torch.zeros(real_shape[:2], device='cuda', dtype=torch.float)
                 depth_img += 1000.
+
                 depth_img = visibility.depth_image(uv, depth, depth_img, uv.shape[0], real_shape[1], real_shape[0])
                 depth_img[depth_img == 1000.] = 0.
 
