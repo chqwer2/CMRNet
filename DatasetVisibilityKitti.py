@@ -163,6 +163,10 @@ class DatasetVisibilityKittiSingle(Dataset):
             pc_in[1, :] *= -1
 
         img = Image.open(img_path)
+        if img.max() > 1.:
+            img = img/ 255.
+
+
         img_rotation = 0.
         if self.split == 'train':
             img_rotation = np.random.uniform(-5, 5)

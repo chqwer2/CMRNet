@@ -361,9 +361,17 @@ def main(_config, _run, seed):
             lidar_input = torch.stack(lidar_input)
             rgb_input = torch.stack(rgb_input)
 
-            print("lidar_input.shape", lidar_input.shape, lidar_input.max(), lidar_input.min())
-            print("rgb_input.shape", rgb_input.shape, rgb_input.max(), rgb_input.min())
+            noise = torch.tensor(np.random.normal(mean, std, tensor.size()), dtype=torch.float)
 
+            # Add some noise...
+
+
+
+            # print("lidar_input.shape", lidar_input.shape, lidar_input.max(), lidar_input.min())
+            # print("rgb_input.shape", rgb_input.shape, rgb_input.max(), rgb_input.min())
+
+            # lidar_input.shape torch.Size([24, 1, 384, 1280]) tensor(1.0164, device='cuda:0') tensor(0., device='cuda:0')
+            # rgb_input.shape torch.Size([24, 3, 384, 1280]) tensor(2.6400, device='cuda:0') tensor(-2.1179, device='cuda:0')
 
             end_preprocess = time.time()
             loss = train(model, optimizer, rgb_input, lidar_input, sample['tr_error'],
