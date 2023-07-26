@@ -120,11 +120,13 @@ class DatasetVisibilityKittiSingle(Dataset):
             #io.imshow(np.array(rgb))
             #io.show()
 
-        rgb = to_tensor(rgb)
+        rgb = to_tensor(rgb)   # 1
 
         print("rgb max", rgb.max())
 
         rgb = normalization(rgb)
+        print("after norm rgb max", rgb.max())
+
         return rgb
 
 
