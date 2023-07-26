@@ -122,10 +122,15 @@ class DatasetVisibilityKittiSingle(Dataset):
 
         rgb = to_tensor(rgb)   # 1
 
-        print("rgb max", rgb.max())
 
-        rgb = normalization(rgb)
-        print("after norm rgb max", rgb.max())
+        # TODO
+        # print("rgb max", rgb.max())
+        noise_level = 15
+        noise = torch.tensor(np.random.normal(0, noise_level, rgb.size()), dtype=torch.float)
+        rgb = torch.clip(rgb + noise, 0, 1)
+
+        rgb = normalization(rgb)   # change to Norm
+        # print("after norm rgb max", rgb.max())
 
         return rgb
 
