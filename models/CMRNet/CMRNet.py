@@ -53,10 +53,11 @@ class CMRNet(nn.Module):
         # rgb shape torch.Size([24, 3, 384, 1280])
         # lidar shape torch.Size([24, 1, 384, 1280])
 
-        # base_name = "tf_efficientnetv2_b0"
+        base_name = "tf_efficientnetv2_b0"
         # tf_efficientnet_lite0
 
-        base_name = 'tf_efficientnetv2_s'
+        # base_name = 'tf_efficientnetv2_s'
+
         # For Camera
         self.rgb_model = timm.create_model(base_name,
                                        in_chans=3,
