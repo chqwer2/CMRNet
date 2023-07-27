@@ -56,16 +56,17 @@ class CMRNet_1(nn.Module):
         # tf_efficientnet_lite0
         # base_name = 'tf_efficientnetv2_s'
 
+        pretrain = True
         # For Camera
         self.rgb_model = timm.create_model(base_name,
                                        in_chans=3,
-                                       pretrained=False,
+                                       pretrained=pretrain,
                                        features_only=True) #, out_indices=[0, 1, 2, 3, 4, 5])
 
         # For Lidar
         self.lidar_model = timm.create_model(base_name,
                                       in_chans=1,
-                                      pretrained=False,
+                                      pretrained=pretrain,
                                       features_only=True) #, out_indices=[0, 1, 2, 3, 4, 5])
 
         dim = 192
@@ -361,13 +362,13 @@ class CMRNet_1(nn.Module):
 
 
 
-class CMRNet(nn.Module):
+class CMRNet_2(nn.Module):
     def __init__(self, image_size, use_feat_from=1, md=4, use_reflectance=False, dropout=0.0):
         """
         input: md --- maximum displacement (for correlation. default: 4), after warpping
         """
 
-        super(CMRNet, self).__init__()
+        super(CMRNet_2, self).__init__()
         input_lidar = 1
         self.use_feat_from = use_feat_from
         print("use_feat_from:", use_feat_from)
@@ -688,3 +689,8 @@ class CMRNet(nn.Module):
         rot = F.normalize(rot, dim=1)
 
         return transl, rot
+
+
+
+
+CMRNet = CMRNet_1
