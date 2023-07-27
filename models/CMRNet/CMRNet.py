@@ -70,8 +70,7 @@ class CMRNet(nn.Module):
                                       pretrained=False,
                                       features_only=True) #, out_indices=[0, 1, 2, 3, 4, 5])
 
-        # [24, 81, 12, 40]
-        dim = 81
+        dim = 192
         self.dowmsample_rgb = nn.Sequential(
                 nn.Conv2d(dim, dim, 3, stride=2, padding=1),
                 nn.BatchNorm2d(dim),
