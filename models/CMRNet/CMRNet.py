@@ -52,12 +52,12 @@ class CMRNet(nn.Module):
         self.rgb_model = timm.create_model(base_name,
                                        in_chans=3,
                                        pretrained=False,
-                                       features_only=True, out_indices=[0, 1, 2, 3, 4, 5])
+                                       features_only=True) #, out_indices=[0, 1, 2, 3, 4, 5])
 
         self.lidar_model = timm.create_model(base_name,
                                       in_chans=1,
                                       pretrained=False,
-                                      features_only=True, out_indices=[0, 1, 2, 3, 4, 5])
+                                      features_only=True) #, out_indices=[0, 1, 2, 3, 4, 5])
 
         # For Camera
         self.conv1a = conv(3, 16, kernel_size=3, stride=2)
