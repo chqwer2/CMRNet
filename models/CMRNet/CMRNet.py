@@ -228,7 +228,7 @@ class CMRNet(nn.Module):
         # io.show()
 
 
-        rgb_features = self.rgb_model(rgb)
+        rgb_features = self.rgb_model(rgb)   # 0,1,2,3,4
         for i,j in enumerate(rgb_features):
             print(f"rgb_features {i} block", i, j.shape)
 
@@ -236,28 +236,17 @@ class CMRNet(nn.Module):
         for i,j in enumerate(lidar_features):
             print(f"lidar_features {i} block", i, j.shape)
 
-        c11 = self.conv1b(self.conv1aa(self.conv1a(rgb)))
-        c21 = self.lconv1b(self.lconv1aa(self.lconv1a(lidar)))
-        c12 = self.conv2b(self.conv2aa(self.conv2a(c11)))
-        c22 = self.lconv2b(self.lconv2aa(self.lconv2a(c21)))
-        c13 = self.conv3b(self.conv3aa(self.conv3a(c12)))
-        c23 = self.lconv3b(self.lconv3aa(self.lconv3a(c22)))
-        c14 = self.conv4b(self.conv4aa(self.conv4a(c13)))
-        c24 = self.lconv4b(self.lconv4aa(self.lconv4a(c23)))
-        c15 = self.conv5b(self.conv5aa(self.conv5a(c14)))
-        c25 = self.lconv5b(self.lconv5aa(self.lconv5a(c24)))
-        c16 = self.conv6b(self.conv6a(self.conv6aa(c15)))
-        c26 = self.lconv6b(self.lconv6a(self.lconv6aa(c25)))
 
         # print("c16 shape", c16.shape)
         # print("c26 shape", c26.shape)
 
-        corr6 = self.corr(c16, c26)      # corr...
-        corr6 = self.leakyRELU(corr6)
-
+        corr4 = self.corr(rgb_features[4], lidar_features[4])      # corr...
+        corr4 = self.leakyRELU(corr4)
         # print("corr6 shape", corr6.shape)
 
-        x = torch.cat((self.conv6_0(corr6), corr6), 1)
+        x = torch.cat((self.conv6_0(corr4), corr4), 1)
+
+
         x = torch.cat((self.conv6_1(x), x), 1)
         x = torch.cat((self.conv6_2(x), x), 1)
         x = torch.cat((self.conv6_3(x), x), 1)
