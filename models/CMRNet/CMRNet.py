@@ -70,9 +70,17 @@ class CMRNet(nn.Module):
                                       pretrained=False,
                                       features_only=True) #, out_indices=[0, 1, 2, 3, 4, 5])
 
+        # [24, 81, 12, 40]
+        dim = 81
+        self.dowmsample_rgb = nn.Sequential(
+                nn.Conv2d(dim, dim, 3, stride=2, padding=1),
+                nn.BatchNorm2d(dim),
+            )
 
-
-
+        self.dowmsample_lidar = nn.Sequential(
+            nn.Conv2d(dim, dim, 3, stride=2, padding=1),
+            nn.BatchNorm2d(dim),
+        )
 
 
 
@@ -165,7 +173,7 @@ class CMRNet(nn.Module):
         else:
             fc_size *= (image_size[1] // downsample)+1
 
-        self.fc1 = nn.Linear(fc_size*4, 512)
+        self.fc1 = nn.Linear(fc_size, 512)
 
         self.fc1_trasl = nn.Linear(512, 256)
         self.fc1_rot = nn.Linear(512, 256)
@@ -239,6 +247,8 @@ class CMRNet(nn.Module):
         for i,j in enumerate(lidar_features):
             print(f"lidar_features {i} block", i, j.shape)
 
+        c_rgb = self.dowmsample_rgb(rgb_features[4])
+        c_lidar = self.dowmsample_lidar(lidar_features[4])
 
         # print("c16 shape", c16.shape)
         # print("c26 shape", c26.shape)
@@ -252,7 +262,7 @@ class CMRNet(nn.Module):
         # c26 shape torch.Size([24, 196, 6, 20])
         # corr6 shape torch.Size([24, 81, 6, 20])
 
-        corr4 = self.corr(rgb_features[4], lidar_features[4])      # corr...
+        corr4 = self.corr(c_rgb, c_lidar)      # corr...
         corr4 = self.leakyRELU(corr4)
         print("corr4 shape", corr4.shape)
 
