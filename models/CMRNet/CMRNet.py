@@ -5,6 +5,7 @@ Jinwei Gu and Zhile Ren
 Modified version (CMRNet) by Daniele Cattaneo
 
 """
+import timm
 
 import os
 os.environ['PYTHON_EGG_CACHE'] = 'tmp/'  # a writable directory
@@ -46,6 +47,17 @@ class CMRNet(nn.Module):
 
         if use_reflectance:
             input_lidar = 2
+
+        base_name = 'tf_efficientnetv2_s'
+        self.rgb_model = timm.create_model(base_name,
+                                       in_chans=3,
+                                       pretrained=False,
+                                       features_only=True, out_indices=[0, 1, 2, 3, 4, 5])
+
+        self.lidar_model = timm.create_model(base_name,
+                                      in_chans=1,
+                                      pretrained=False,
+                                      features_only=True, out_indices=[0, 1, 2, 3, 4, 5])
 
         # For Camera
         self.conv1a = conv(3, 16, kernel_size=3, stride=2)
@@ -100,6 +112,8 @@ class CMRNet(nn.Module):
         self.conv6_2 = conv(od + dd[1], 96, kernel_size=3, stride=1)
         self.conv6_3 = conv(od + dd[2], 64, kernel_size=3, stride=1)
         self.conv6_4 = conv(od + dd[3], 32, kernel_size=3, stride=1)
+
+
 
 
 
@@ -173,6 +187,7 @@ class CMRNet(nn.Module):
             fc_size *= image_size[1] // downsample
         else:
             fc_size *= (image_size[1] // downsample)+1
+
         self.fc1 = nn.Linear(fc_size, 512)
 
         self.fc1_trasl = nn.Linear(512, 256)
@@ -241,6 +256,9 @@ class CMRNet(nn.Module):
         # io.show()
         # print("rgb shape", rgb.shape)
         # print("lidar shape", lidar.shape)
+        rgb_features = self.rgb_model(rgb)
+        for i,j in enumerate(rgb_features):
+            print(f"rgb_features {i} block", i, j.shape)
 
 
         c11 = self.conv1b(self.conv1aa(self.conv1a(rgb)))

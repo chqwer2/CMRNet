@@ -363,9 +363,9 @@ def main(_config, _run, seed):
 
 
             # TODO Add Noise
-            noise_level = 15
-            noise = torch.tensor(np.random.normal(0, noise_level, lidar_input.size()), dtype=torch.float).cuda()
-            lidar_input = torch.clip(lidar_input + noise, 0, 1)
+            # noise_level = 15
+            # noise = torch.tensor(np.random.normal(0, noise_level, lidar_input.size()), dtype=torch.float).cuda()
+            # lidar_input = torch.clip(lidar_input + noise, 0, 1)
 
             # print("lidar_input.shape", lidar_input.shape, lidar_input.max(), lidar_input.min())
             # print("rgb_input.shape", rgb_input.shape, rgb_input.max(), rgb_input.min())
