@@ -35,13 +35,12 @@ def deconv(in_planes, out_planes, kernel_size=4, stride=2, padding=1):
 
 
 
-class CMRNet(nn.Module):
+class CMRNet_1(nn.Module):
     def __init__(self, image_size, use_feat_from=1, md=4, use_reflectance=False, dropout=0.0):
         """
         input: md --- maximum displacement (for correlation. default: 4), after warpping
         """
-
-        super(CMRNet, self).__init__()
+        super(CMRNet_1, self).__init__()
         input_lidar = 1
         self.use_feat_from = use_feat_from
         print("use_feat_from:", use_feat_from)
@@ -55,7 +54,6 @@ class CMRNet(nn.Module):
 
         base_name = "tf_efficientnetv2_b0"
         # tf_efficientnet_lite0
-
         # base_name = 'tf_efficientnetv2_s'
 
         # For Camera
@@ -363,13 +361,13 @@ class CMRNet(nn.Module):
 
 
 
-class CMRNet_v1(nn.Module):
+class CMRNet(nn.Module):
     def __init__(self, image_size, use_feat_from=1, md=4, use_reflectance=False, dropout=0.0):
         """
         input: md --- maximum displacement (for correlation. default: 4), after warpping
         """
 
-        super(CMRNet_v1, self).__init__()
+        super(CMRNet, self).__init__()
         input_lidar = 1
         self.use_feat_from = use_feat_from
         print("use_feat_from:", use_feat_from)
@@ -382,15 +380,7 @@ class CMRNet_v1(nn.Module):
         # lidar shape torch.Size([24, 1, 384, 1280])
 
         base_name = 'tf_efficientnetv2_s'
-        self.rgb_model = timm.create_model(base_name,
-                                       in_chans=3,
-                                       pretrained=False,
-                                       features_only=True) #, out_indices=[0, 1, 2, 3, 4, 5])
 
-        self.lidar_model = timm.create_model(base_name,
-                                      in_chans=1,
-                                      pretrained=False,
-                                      features_only=True) #, out_indices=[0, 1, 2, 3, 4, 5])
 
         # For Camera
         self.conv1a = conv(3, 16, kernel_size=3, stride=2)
@@ -584,14 +574,6 @@ class CMRNet_v1(nn.Module):
         # io.imshow(lidar[0].cpu().numpy().swapaxes(0, 2).squeeze().T, 'matplotlib', cmap='jet')
         # io.show()
 
-
-        rgb_features = self.rgb_model(rgb)
-        for i,j in enumerate(rgb_features):
-            print(f"rgb_features {i} block", i, j.shape)
-
-        lidar_features = self.lidar_model(lidar)
-        for i,j in enumerate(lidar_features):
-            print(f"lidar_features {i} block", i, j.shape)
 
         c11 = self.conv1b(self.conv1aa(self.conv1a(rgb)))
         c21 = self.lconv1b(self.lconv1aa(self.lconv1a(lidar)))
