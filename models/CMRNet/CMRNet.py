@@ -228,6 +228,8 @@ class CMRNet(nn.Module):
         # io.show()
 
 
+        # torch.Size([24, 192, 12, 40])
+
         rgb_features = self.rgb_model(rgb)   # 0,1,2,3,4
         for i,j in enumerate(rgb_features):
             print(f"rgb_features {i} block", i, j.shape)
@@ -240,9 +242,16 @@ class CMRNet(nn.Module):
         # print("c16 shape", c16.shape)
         # print("c26 shape", c26.shape)
 
+        # effn torch.Size([24, 192, 12, 40])
+
+
+        # c16 shape torch.Size([24, 196, 6, 20])
+        # c26 shape torch.Size([24, 196, 6, 20])
+        # corr6 shape torch.Size([24, 81, 6, 20])
+
         corr4 = self.corr(rgb_features[4], lidar_features[4])      # corr...
         corr4 = self.leakyRELU(corr4)
-        # print("corr6 shape", corr6.shape)
+        print("corr4 shape", corr4.shape)
 
         x = torch.cat((self.conv6_0(corr4), corr4), 1)
 
