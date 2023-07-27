@@ -154,6 +154,7 @@ class CMRNet(nn.Module):
             self.dc_conv7 = predict_flow(32)
 
         fc_size = od + dd[4]
+
         downsample = 128 // (2**use_feat_from)
         if image_size[0] % downsample == 0:
             fc_size *= image_size[0] // downsample
@@ -164,7 +165,7 @@ class CMRNet(nn.Module):
         else:
             fc_size *= (image_size[1] // downsample)+1
 
-        self.fc1 = nn.Linear(fc_size, 512)
+        self.fc1 = nn.Linear(fc_size*4, 512)
 
         self.fc1_trasl = nn.Linear(512, 256)
         self.fc1_rot = nn.Linear(512, 256)
@@ -243,6 +244,8 @@ class CMRNet(nn.Module):
         # print("c26 shape", c26.shape)
 
         # effn torch.Size([24, 192, 12, 40])
+        # corr4 shape torch.Size([24, 81, 12, 40])
+
 
 
         # c16 shape torch.Size([24, 196, 6, 20])
