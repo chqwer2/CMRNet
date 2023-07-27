@@ -239,12 +239,12 @@ class CMRNet(nn.Module):
         # torch.Size([24, 192, 12, 40])
 
         rgb_features = self.rgb_model(rgb)   # 0,1,2,3,4
-        for i,j in enumerate(rgb_features):
-            print(f"rgb_features {i} block", i, j.shape)
+        # for i,j in enumerate(rgb_features):
+        #     print(f"rgb_features {i} block", i, j.shape)
 
         lidar_features = self.lidar_model(lidar)
-        for i,j in enumerate(lidar_features):
-            print(f"lidar_features {i} block", i, j.shape)
+        # for i,j in enumerate(lidar_features):
+        #     print(f"lidar_features {i} block", i, j.shape)
 
         c_rgb = self.dowmsample_rgb(rgb_features[4])
         c_lidar = self.dowmsample_lidar(lidar_features[4])
@@ -263,7 +263,7 @@ class CMRNet(nn.Module):
 
         corr4 = self.corr(c_rgb, c_lidar)      # corr...
         corr4 = self.leakyRELU(corr4)
-        print("corr4 shape", corr4.shape)
+        # print("corr4 shape", corr4.shape)
 
         x = torch.cat((self.conv6_0(corr4), corr4), 1)
 
