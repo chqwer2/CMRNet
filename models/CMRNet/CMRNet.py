@@ -251,15 +251,14 @@ class CMRNet(nn.Module):
         # io.imshow(lidar[0].cpu().numpy().swapaxes(0, 2).squeeze().T, 'matplotlib', cmap='jet')
         # io.show()
 
-        # asd = overlay_imgs(rgb[0], lidar)
-        # io.imshow(asd)
-        # io.show()
-        # print("rgb shape", rgb.shape)
-        # print("lidar shape", lidar.shape)
+
         rgb_features = self.rgb_model(rgb)
         for i,j in enumerate(rgb_features):
             print(f"rgb_features {i} block", i, j.shape)
 
+        lidar_features = self.lidar_model(lidar)
+        for i,j in enumerate(lidar_features):
+            print(f"lidar_features {i} block", i, j.shape)
 
         c11 = self.conv1b(self.conv1aa(self.conv1a(rgb)))
         c21 = self.lconv1b(self.lconv1aa(self.lconv1a(lidar)))
