@@ -274,7 +274,7 @@ class CMRNet_effn(nn.Module):
         # print("corr4 shape", corr4.shape)
 
         x = torch.cat((self.conv6_0(corr4), corr4), 1)  # corr4, c_rgb, c_lidar), 1)   #
-        print("x cat:", x.shape)
+        # print("x cat:", x.shape)
 
         x = torch.cat((self.conv6_1(x), x), 1)
         x = torch.cat((self.conv6_2(x), x), 1)
