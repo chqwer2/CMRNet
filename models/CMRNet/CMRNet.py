@@ -694,8 +694,8 @@ class CMRNet_benchmark(nn.Module):
 
 def CMRNet(image_size, use_feat_from=1, md=4, use_reflectance=False, dropout=0.0, model_type="effn"):
     if model_type == "effn":
-        CMRNet_effn(image_size, use_feat_from=use_feat_from, md=md, use_reflectance=use_reflectance, dropout=dropout)
+        return CMRNet_effn(image_size, use_feat_from=use_feat_from, md=md, use_reflectance=use_reflectance, dropout=dropout)
     elif model_type == "benchmark":
-        CMRNet_benchmark(image_size, use_feat_from=use_feat_from, md=md, use_reflectance=use_reflectance, dropout=dropout)
+        return CMRNet_benchmark(image_size, use_feat_from=use_feat_from, md=md, use_reflectance=use_reflectance, dropout=dropout)
 
 
