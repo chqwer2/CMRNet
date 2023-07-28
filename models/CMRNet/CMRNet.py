@@ -73,12 +73,14 @@ class CMRNet_effn(nn.Module):
         dim = 192
         self.dowmsample_rgb = nn.Sequential(
                 nn.Conv2d(dim, dim, 3, stride=2, padding=1),
-                # nn.BatchNorm2d(dim),
+                nn.BatchNorm2d(dim),
+                nn.SiLU(inplace=True)
             )
 
         self.dowmsample_lidar = nn.Sequential(
             nn.Conv2d(dim, dim, 3, stride=2, padding=1),
-            # nn.BatchNorm2d(dim),
+            nn.BatchNorm2d(dim),
+            nn.SiLU(inplace=True)
         )
 
         self.ln_rgb = nn.LayerNorm(dim)
@@ -257,8 +259,8 @@ class CMRNet_effn(nn.Module):
 
 
 
-        c_rgb = self.dowmsample_rgb(self.ln_rgb(rgb_features[4]))
-        c_lidar = self.dowmsample_lidar(self.ln_lidar(lidar_features[4]))
+        c_rgb = self.dowmsample_rgb(rgb_features[4])
+        c_lidar = self.dowmsample_lidar(lidar_features[4])
 
         # print("c16 shape", c16.shape)
         # print("c26 shape", c26.shape)
