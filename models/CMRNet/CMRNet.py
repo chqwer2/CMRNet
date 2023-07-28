@@ -98,7 +98,7 @@ class CMRNet_effn(nn.Module):
 
 
         self.conv_after_concat = conv(od, 128, kernel_size=3, stride=1)
-        self.bn_after_concat = nn.BatchNorm2d(od)
+        self.bn_after_concat = nn.BatchNorm2d(128)
 
         # self.conv6_1 = conv(od + dd[0], 128, kernel_size=3, stride=1)
         # self.conv6_2 = conv(od + dd[1], 96, kernel_size=3, stride=1)
