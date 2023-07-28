@@ -237,7 +237,7 @@ class CMRNet_effn(nn.Module):
         print("x cat:", x.shape)
 
         x = self.conv_after_concat(x)
-        x = self.bn(x)
+        x = self.bn_after_concat(x)
         x = self.leakyRELU(x) # dim=128
 
 
