@@ -35,12 +35,12 @@ def deconv(in_planes, out_planes, kernel_size=4, stride=2, padding=1):
 
 
 
-class CMRNet_1(nn.Module):
+class CMRNet_effn(nn.Module):
     def __init__(self, image_size, use_feat_from=1, md=4, use_reflectance=False, dropout=0.0):
         """
         input: md --- maximum displacement (for correlation. default: 4), after warpping
         """
-        super(CMRNet_1, self).__init__()
+        super(CMRNet_effn, self).__init__()
         input_lidar = 1
         self.use_feat_from = use_feat_from
         print("use_feat_from:", use_feat_from)
@@ -362,13 +362,13 @@ class CMRNet_1(nn.Module):
 
 
 
-class CMRNet_2(nn.Module):
+class CMRNet_benchmark(nn.Module):
     def __init__(self, image_size, use_feat_from=1, md=4, use_reflectance=False, dropout=0.0):
         """
         input: md --- maximum displacement (for correlation. default: 4), after warpping
         """
 
-        super(CMRNet_2, self).__init__()
+        super(CMRNet_benchmark, self).__init__()
         input_lidar = 1
         self.use_feat_from = use_feat_from
         print("use_feat_from:", use_feat_from)
@@ -692,5 +692,10 @@ class CMRNet_2(nn.Module):
 
 
 
+def CMRNet(image_size, use_feat_from=1, md=4, use_reflectance=False, dropout=0.0, model_type="effn"):
+    if model_type == "effn":
+        CMRNet_effn(image_size, use_feat_from=use_feat_from, md=md, use_reflectance=use_reflectance, dropout=dropout)
+    elif model_type == "benchmark":
+        CMRNet_benchmark(image_size, use_feat_from=use_feat_from, md=md, use_reflectance=use_reflectance, dropout=dropout)
 
-CMRNet = CMRNet_1
+

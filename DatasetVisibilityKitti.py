@@ -151,6 +151,7 @@ class DatasetVisibilityKittiSingle(Dataset):
                 if self.use_reflectance:
                     reflectance = hf['intensity'][:]
                     reflectance = torch.from_numpy(reflectance).float()
+
         except Exception as e:
             print(f'File Broken: {pc_path}')
             raise e

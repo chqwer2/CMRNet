@@ -42,6 +42,27 @@ ex = Experiment("CMRNet")
 ex.captured_out_filter = apply_backspaces_and_linefeeds
 
 
+import wandb
+wandb.login(key="ee52f649687b804de41f2c26b2049c7cd3e4db99")
+
+
+model_type = "benchmark"    # | "benchmark" | "eff"
+
+model_name = model_type
+
+run = wandb.init(
+    # Set the project where this run will be logged
+    project="CMRNet",
+    # group="",
+    tags="DEBUG",
+    name=model_name,
+    # Track hyperparameters and run metadata
+
+)
+
+
+
+
 # noinspection PyUnusedLocal
 @ex.config
 def config():
@@ -70,6 +91,7 @@ def config():
     dropout = 0.0
     max_depth = 100.
     maps_folder = 'local_maps_0.1'
+
 
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -222,7 +244,7 @@ def main(_config, _run, seed):
         assert 0 < feat < 7, "Feature Number from PWC have to be between 1 and 6"
         assert 0 < md, "md must be positive"
         model = CMRNet(img_shape, use_feat_from=feat, md=md,
-                       use_reflectance=_config['use_reflectance'], dropout=_config['dropout'])
+                       use_reflectance=_config['use_reflectance'], dropout=_config['dropout'], model_type=model_type)
     else:
         raise TypeError("Network unknown")
     if _config['weights'] is not None:
@@ -525,14 +547,17 @@ def main(_config, _run, seed):
             else:
                 _run.result = total_test_r / len(dataset_val)
             savefilename = f'{_config["savemodel"]}/checkpoint_r{_config["max_r"]:.2f}_t{_config["max_t"]:.2f}_e{epoch}_{val_loss:.3f}.tar'
-            torch.save({
-                'config': _config,
-                'epoch': epoch,
-                'state_dict': model.state_dict(),
-                'optimizer': optimizer.state_dict(),
-                'train_loss': total_train_loss / len(dataset),
-                'test_loss': total_test_loss / len(dataset_val),
-            }, savefilename)
+
+
+            # torch.save({
+            #     'config': _config,
+            #     'epoch': epoch,
+            #     'state_dict': model.state_dict(),
+            #     'optimizer': optimizer.state_dict(),
+            #     'train_loss': total_train_loss / len(dataset),
+            #     'test_loss': total_test_loss / len(dataset_val),
+            # }, savefilename)
+
             print(f'Model saved as {savefilename}')
             if old_save_filename is not None:
                 if os.path.exists(old_save_filename):
