@@ -52,7 +52,8 @@ class CMRNet_effn(nn.Module):
         # rgb shape torch.Size([24, 3, 384, 1280])
         # lidar shape torch.Size([24, 1, 384, 1280])
 
-        base_name = "tf_efficientnetv2_b0"
+        base_name = "tf_efficientnetv2_b0"  # convnext
+
         # tf_efficientnet_lite0
         # base_name = 'tf_efficientnetv2_s'
 
@@ -61,35 +62,42 @@ class CMRNet_effn(nn.Module):
         self.rgb_model = timm.create_model(base_name,
                                        in_chans=3,
                                        pretrained=pretrain,
-                                       features_only=True) #, out_indices=[0, 1, 2, 3, 4, 5])
+                                       features_only=True)
 
         # For Lidar
         self.lidar_model = timm.create_model(base_name,
                                       in_chans=1,
                                       pretrained=pretrain,
-                                      features_only=True) #, out_indices=[0, 1, 2, 3, 4, 5])
+                                      features_only=True)
 
         dim = 192
         self.dowmsample_rgb = nn.Sequential(
                 nn.Conv2d(dim, dim, 3, stride=2, padding=1),
-                nn.BatchNorm2d(dim),
+                # nn.BatchNorm2d(dim),
             )
 
         self.dowmsample_lidar = nn.Sequential(
             nn.Conv2d(dim, dim, 3, stride=2, padding=1),
-            nn.BatchNorm2d(dim),
+            # nn.BatchNorm2d(dim),
         )
 
+        self.ln_rgb = nn.LayerNorm(dim)
+        self.ln_lidar = nn.LayerNorm(dim)
 
 
         self.corr = Correlation(pad_size=md, kernel_size=1, max_displacement=md, stride1=1, stride2=1, corr_multiply=1)
         self.leakyRELU = nn.LeakyReLU(0.1)
 
+
+        # Down sample
         nd = (2 * md + 1) ** 2
         dd = np.cumsum([128, 128, 96, 64, 32])
-
         od = nd
-        self.conv6_0 = conv(od, 128, kernel_size=3, stride=1)
+
+
+        self.conv_after_concat = conv(od, 128, kernel_size=3, stride=1)
+        self.bn_after_concat = nn.BatchNorm2d(od + dd[4])
+
         self.conv6_1 = conv(od + dd[0], 128, kernel_size=3, stride=1)
         self.conv6_2 = conv(od + dd[1], 96, kernel_size=3, stride=1)
         self.conv6_3 = conv(od + dd[2], 64, kernel_size=3, stride=1)
@@ -245,16 +253,16 @@ class CMRNet_effn(nn.Module):
         # for i,j in enumerate(lidar_features):
         #     print(f"lidar_features {i} block", i, j.shape)
 
-        c_rgb = self.dowmsample_rgb(rgb_features[4])
-        c_lidar = self.dowmsample_lidar(lidar_features[4])
+
+
+        c_rgb = self.dowmsample_rgb(self.ln_rgb(rgb_features[4]))
+        c_lidar = self.dowmsample_lidar(self.ln_lidar(lidar_features[4]))
 
         # print("c16 shape", c16.shape)
         # print("c26 shape", c26.shape)
 
         # effn torch.Size([24, 192, 12, 40])
         # corr4 shape torch.Size([24, 81, 12, 40])
-
-
 
         # c16 shape torch.Size([24, 196, 6, 20])
         # c26 shape torch.Size([24, 196, 6, 20])
@@ -264,7 +272,12 @@ class CMRNet_effn(nn.Module):
         corr4 = self.leakyRELU(corr4)
         # print("corr4 shape", corr4.shape)
 
-        x = torch.cat((self.conv6_0(corr4), corr4), 1)
+        x = torch.cat((corr4, c_rgb, c_lidar), 1)   # self.conv6_0(corr4), corr4
+        print("x cat:", x.shape)
+        x = self.conv_after_concat(x)
+        x = self.bn(x)
+        x = self.leakyRELU(x)
+
 
 
         x = torch.cat((self.conv6_1(x), x), 1)
