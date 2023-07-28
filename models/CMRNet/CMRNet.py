@@ -123,8 +123,8 @@ class CMRNet_effn(nn.Module):
             self.conv5_4 = conv(od + dd[3], 32, kernel_size=3, stride=1)
 
 
-
-        self.ln = nn.LayerNorm(32)
+        ln_dim = 3840
+        self.ln = nn.LayerNorm(3840)
 
         fc_size = 32 #od + dd[4]
 
