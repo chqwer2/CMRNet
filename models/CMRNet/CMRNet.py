@@ -98,9 +98,6 @@ class CMRNet_effn(nn.Module):
 
 
         self.conv6_0 = conv(od, 128, kernel_size=3, stride=1)
-
-
-
         self.conv6_1 = conv(od + dd[0], 128, kernel_size=3, stride=1)
         self.conv6_2 = conv(od + dd[1], 96, kernel_size=3, stride=1)
         self.conv6_3 = conv(od + dd[2], 64, kernel_size=3, stride=1)
@@ -276,7 +273,7 @@ class CMRNet_effn(nn.Module):
         corr4 = self.leakyRELU(corr4)
         # print("corr4 shape", corr4.shape)
 
-        x = torch.cat((corr4, c_rgb, c_lidar), 1)   # self.conv6_0(corr4), corr4
+        x = torch.cat((self.conv6_0(corr4), corr4), 1)  # corr4, c_rgb, c_lidar), 1)   #
         print("x cat:", x.shape)
 
         x = torch.cat((self.conv6_1(x), x), 1)
