@@ -46,7 +46,10 @@ import wandb
 wandb.login(key="ee52f649687b804de41f2c26b2049c7cd3e4db99")
 
 
-model_type = "benchmark"    # | "benchmark" | "eff"
+# model_type = "benchmark"    # | "benchmark" | "effn"
+model_type = "effn"    # | "benchmark" | "effn"
+
+
 
 model_name = model_type
 
@@ -424,6 +427,8 @@ def main(_config, _run, seed):
         print('Total epoch time = %.2f' % (time.time() - epoch_start_time))
         print("------------------------------------")
         _run.log_scalar("Total training loss", total_train_loss / len(dataset), epoch)
+        print("Training model_type:", model_type)
+
 
         ## Test ##
         total_test_loss = 0.
