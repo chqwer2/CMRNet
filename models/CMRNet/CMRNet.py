@@ -87,21 +87,24 @@ class CMRNet_effn(nn.Module):
 
         self.corr = Correlation(pad_size=md, kernel_size=1, max_displacement=md, stride1=1, stride2=1, corr_multiply=1)
         self.leakyRELU = nn.LeakyReLU(0.1)
+        # output dim = 81
 
 
         # Down sample
-        nd = (2 * md + 1) ** 2
-        dd = np.cumsum([128, 128, 96, 64, 32])
+        nd = 465 #(2 * md + 1) ** 2
+        # dd = np.cumsum([128, 128, 96, 64, 32])
+        dd = np.cumsum([465, 128])
         od = nd
 
 
         self.conv_after_concat = conv(od, 128, kernel_size=3, stride=1)
-        self.bn_after_concat = nn.BatchNorm2d(od + dd[4])
+        self.bn_after_concat = nn.BatchNorm2d(od)
 
-        self.conv6_1 = conv(od + dd[0], 128, kernel_size=3, stride=1)
-        self.conv6_2 = conv(od + dd[1], 96, kernel_size=3, stride=1)
-        self.conv6_3 = conv(od + dd[2], 64, kernel_size=3, stride=1)
-        self.conv6_4 = conv(od + dd[3], 32, kernel_size=3, stride=1)
+        # self.conv6_1 = conv(od + dd[0], 128, kernel_size=3, stride=1)
+        # self.conv6_2 = conv(od + dd[1], 96, kernel_size=3, stride=1)
+        # self.conv6_3 = conv(od + dd[2], 64, kernel_size=3, stride=1)
+
+        self.conv6_4 = conv(128, 32, kernel_size=3, stride=1)
 
 
 
@@ -123,9 +126,11 @@ class CMRNet_effn(nn.Module):
 
 
 
-        fc_size = od + dd[4]
+        fc_size = 32 #od + dd[4]
 
         downsample = 128 // (2**use_feat_from)
+
+
         if image_size[0] % downsample == 0:
             fc_size *= image_size[0] // downsample
         else:
@@ -143,7 +148,7 @@ class CMRNet_effn(nn.Module):
         self.fc2_trasl = nn.Linear(256, 3)
         self.fc2_rot = nn.Linear(256, 4)
 
-        self.dropout = nn.Dropout(dropout)
+        self.dropout = nn.Dropout(0.0) #dropout)
 
         for m in self.modules():
             if isinstance(m, nn.Conv2d) or isinstance(m, nn.ConvTranspose2d):
@@ -233,14 +238,16 @@ class CMRNet_effn(nn.Module):
 
         x = self.conv_after_concat(x)
         x = self.bn(x)
-        x = self.leakyRELU(x)
+        x = self.leakyRELU(x) # dim=128
 
 
 
-        x = torch.cat((self.conv6_1(x), x), 1)
-        x = torch.cat((self.conv6_2(x), x), 1)
-        x = torch.cat((self.conv6_3(x), x), 1)
-        x = torch.cat((self.conv6_4(x), x), 1)
+        # x = torch.cat((self.conv6_1(x), x), 1)
+
+        # x = torch.cat((self.conv6_2(x), x), 1)
+        # x = torch.cat((self.conv6_3(x), x), 1)
+
+        x = self.conv6_4(x)
 
         # print("before use feat x shape", x.shape)
         if self.use_feat_from > 1:
