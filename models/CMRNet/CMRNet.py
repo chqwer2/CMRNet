@@ -124,7 +124,7 @@ class CMRNet_effn(nn.Module):
 
 
 
-
+        self.ln = nn.LayerNorm(32)
 
         fc_size = 32 #od + dd[4]
 
@@ -269,6 +269,9 @@ class CMRNet_effn(nn.Module):
 
 
         x = x.view(x.shape[0], -1)  # flatten...
+        x = self.ln(x)
+
+
 
         x = self.dropout(x)
         x = self.leakyRELU(self.fc1(x))
