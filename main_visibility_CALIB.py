@@ -84,7 +84,7 @@ def config():
     batch_size = 8  # 32
     num_worker = 3
     network = 'PWC_f1'
-    optimizer = 'adam'
+    optimizer = 'adamw'
     resume = None
     weights = None
     rescale_rot = 1
@@ -267,12 +267,20 @@ def main(_config, _run, seed):
     print('Number of model parameters: {}'.format(sum([p.data.nelement() for p in model.parameters()])))
 
     parameters = list(filter(lambda p: p.requires_grad, model.parameters()))
+    
     if _config['loss'] == 'geometric':
         parameters += list(loss_fn.parameters())
+        
     if _config['optimizer'] == 'adam':
         optimizer = optim.Adam(parameters, lr=_config['BASE_LEARNING_RATE'], weight_decay=5e-6)
         # Probably this scheduler is not used
         scheduler = torch.optim.lr_scheduler.MultiStepLR(optimizer, milestones=[20, 50, 70], gamma=0.5)
+        
+    elif _config['optimizer'] == 'adamw':
+        optimizer = optim.AdamW(parameters, lr=_config['BASE_LEARNING_RATE'], weight_decay=5e-6)
+        # Probably this scheduler is not used
+        scheduler = torch.optim.lr_scheduler.MultiStepLR(optimizer, milestones=[20, 50, 70], gamma=0.5)
+        
     else:
         optimizer = optim.SGD(parameters, lr=_config['BASE_LEARNING_RATE'], momentum=0.9,
                               weight_decay=5e-6, nesterov=True)
