@@ -81,10 +81,10 @@ def config():
     loss = 'simple'
     max_t = 2.
     max_r = 10.
-    batch_size = 8  # 32
+    batch_size = 8        # 32
     num_worker = 3
     network = 'PWC_f1'
-    optimizer = 'adamw'
+    optimizer = 'adam'
     resume = None
     weights = None
     rescale_rot = 1
