@@ -163,6 +163,7 @@ def test(model, rgb_img, refl_img, target_transl, target_rot, loss_fn, camera_mo
 @ex.automain
 def main(_config, _run, seed):
     global EPOCH
+    global model_name
     
     model_name += f"_bs{_config['batch_size']}"
     model_name += f"_{_config['optimizer']}"
