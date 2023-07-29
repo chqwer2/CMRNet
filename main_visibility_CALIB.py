@@ -84,14 +84,14 @@ def config():
     batch_size = 8        # 32
     num_worker = 3
     network = 'PWC_f1'
-    optimizer = "sgd" #'adamw'
+    optimizer = 'adamw'   # "sgd" #
     resume = None
     weights = None
     rescale_rot = 1
     rescale_transl = 1
     precision = "O0"
     norm = 'bn'
-    dropout = 0.0
+    dropout = 0.05  # 
     max_depth = 100.
     maps_folder = 'local_maps_0.1'
 
@@ -123,6 +123,7 @@ def train(model, optimizer, rgb_img, refl_img, target_transl, target_rot, loss_f
         total_loss = loss_fn(target_transl, target_rot, transl_err, rot_err)
     else:
         total_loss = loss_fn(point_clouds, target_transl, target_rot, transl_err, rot_err)
+        
 
     # with apex.amp.scale_loss(total_loss, optimizer) as scaled_loss:
     #     scaled_loss.backward()
@@ -167,6 +168,7 @@ def main(_config, _run, seed):
     
     model_name += f"_bs{_config['batch_size']}"
     model_name += f"_{_config['optimizer']}"
+    model_name += f"_drop{_config['dropout']}"
 
     print(_config['loss'])
 

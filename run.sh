@@ -20,7 +20,7 @@ python preprocess/kitti_maps.py --sequence 09 --kitti_folder ../kitti/dataset
 
 
 # Step 1 Train
-python main_visibility_CALIB.py with batch_size=8 \
+python main_visibility_CALIB.py with batch_size=4 \
        data_folder=../kitti/dataset/sequences \
        epochs=300 max_r=10 max_t=2 BASE_LEARNING_RATE=0.0001 \
        savemodel=./checkpoints/ test_sequence=0
