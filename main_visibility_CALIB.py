@@ -84,7 +84,7 @@ def config():
     batch_size = 8        # 32
     num_worker = 3
     network = 'PWC_f1'
-    optimizer = 'adam'
+    optimizer = 'adamw'
     resume = None
     weights = None
     rescale_rot = 1
