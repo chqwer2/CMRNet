@@ -274,17 +274,15 @@ def main(_config, _run, seed):
     if _config['optimizer'] == 'adam':
         optimizer = optim.Adam(parameters, lr=_config['BASE_LEARNING_RATE'], weight_decay=5e-6)
         # Probably this scheduler is not used
-        scheduler = torch.optim.lr_scheduler.MultiStepLR(optimizer, milestones=[20, 50, 70], gamma=0.5)
-        
     elif _config['optimizer'] == 'adamw':
         optimizer = optim.AdamW(parameters, lr=_config['BASE_LEARNING_RATE'], weight_decay=5e-6)
         # Probably this scheduler is not used
-        scheduler = torch.optim.lr_scheduler.MultiStepLR(optimizer, milestones=[20, 50, 70], gamma=0.5)
+        
         
     else:
         optimizer = optim.SGD(parameters, lr=_config['BASE_LEARNING_RATE'], momentum=0.9,
                               weight_decay=5e-6, nesterov=True)
-
+    scheduler = torch.optim.lr_scheduler.MultiStepLR(optimizer, milestones=[20, 50, 70], gamma=0.5)
     starting_epoch = 0
     if _config['weights'] is not None and _config['resume']:
         checkpoint = torch.load(_config['weights'], map_location='cpu')
@@ -306,7 +304,7 @@ def main(_config, _run, seed):
         epoch_start_time = time.time()
         total_train_loss = 0
         local_loss = 0.
-        if _config['optimizer'] != 'adam':
+        if _config['optimizer'] != 'adam' or _config['optimizer'] != 'adamw' :
             _run.log_scalar("LR", _config['BASE_LEARNING_RATE'] *
                             math.exp((1 - epoch) * 4e-2), epoch)
             for param_group in optimizer.param_groups:
