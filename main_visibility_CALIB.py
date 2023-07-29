@@ -81,7 +81,7 @@ def config():
     loss = 'simple'
     max_t = 2.
     max_r = 10.
-    batch_size = 24  # 32
+    batch_size = 8  # 32
     num_worker = 3
     network = 'PWC_f1'
     optimizer = 'adam'
@@ -96,6 +96,8 @@ def config():
     maps_folder = 'local_maps_0.1'
 
 
+model_name += f"_bs{config['batch_size']}"
+model_name += f"_{config['optimizer']}"
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
@@ -427,7 +429,8 @@ def main(_config, _run, seed):
         print('Total epoch time = %.2f' % (time.time() - epoch_start_time))
         print("------------------------------------")
         _run.log_scalar("Total training loss", total_train_loss / len(dataset), epoch)
-        print("Training model_type:", model_type)
+        
+        print("Training model name:", model_name)
 
 
         ## Test ##
