@@ -96,8 +96,7 @@ def config():
     maps_folder = 'local_maps_0.1'
 
 
-model_name += f"_bs{config['batch_size']}"
-model_name += f"_{config['optimizer']}"
+
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
@@ -164,6 +163,10 @@ def test(model, rgb_img, refl_img, target_transl, target_rot, loss_fn, camera_mo
 @ex.automain
 def main(_config, _run, seed):
     global EPOCH
+    
+    model_name += f"_bs{_config['batch_size']}"
+    model_name += f"_{_config['optimizer']}"
+
     print(_config['loss'])
 
     if _config['test_sequence'] is None:
