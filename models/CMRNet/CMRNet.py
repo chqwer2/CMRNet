@@ -249,8 +249,8 @@ class CMRNet_effn(nn.Module):
         # torch.Size([24, 192, 12, 40])
 
         rgb_features = self.rgb_model(rgb)   # 0,1,2,3,4
-        for i,j in enumerate(rgb_features):
-            print(f"rgb_features {i} block", i, j.shape)
+        # for i,j in enumerate(rgb_features):
+        #     print(f"rgb_features {i} block", i, j.shape)
 
         lidar_features = self.lidar_model(lidar)
         # for i,j in enumerate(lidar_features):
@@ -357,11 +357,12 @@ class CMRNet_effn(nn.Module):
 
         x = x.view(x.shape[0], -1)  # flatten...
 
-        x = self.ln(x)
+        
 
         x = self.dropout(x)
         x = self.leakyRELU(self.fc1(x))
-
+        
+        x = self.ln(x)
 
         transl = self.leakyRELU(self.fc1_trasl(x))
         rot = self.leakyRELU(self.fc1_rot(x))
