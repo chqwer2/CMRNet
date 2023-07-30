@@ -52,10 +52,12 @@ class CMRNet_effn(nn.Module):
         # rgb shape torch.Size([24, 3, 384, 1280])
         # lidar shape torch.Size([24, 1, 384, 1280])
 
-        # base_name = "tf_efficientnetv2_b0"  # convnext
+        base_name = "tf_efficientnetv2_b0"  # convnext
+        dim = 192
 
         # tf_efficientnet_lite0
         base_name = 'tf_efficientnetv2_s'
+        dim = 256
 
         pretrain = True
         # For Camera
@@ -70,7 +72,7 @@ class CMRNet_effn(nn.Module):
                                       pretrained=pretrain,
                                       features_only=True)
 
-        dim = 192
+        
         self.dowmsample_rgb = nn.Sequential(
                 nn.Conv2d(dim, dim, 3, stride=2, padding=1),
                 nn.BatchNorm2d(dim),
