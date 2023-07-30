@@ -181,7 +181,7 @@ class CMRNet_effn(nn.Module):
         else:
             fc_size *= (image_size[1] // downsample)+1
 
-        self.ln = nn.LayerNorm(fc_size)
+        self.ln = nn.LayerNorm(512)  # fc_size)
         self.fc1 = nn.Linear(fc_size, 512)
 
         self.fc1_trasl = nn.Linear(512, 256)
@@ -356,9 +356,6 @@ class CMRNet_effn(nn.Module):
 
 
         x = x.view(x.shape[0], -1)  # flatten...
-
-        
-
         x = self.dropout(x)
         x = self.leakyRELU(self.fc1(x))
         
