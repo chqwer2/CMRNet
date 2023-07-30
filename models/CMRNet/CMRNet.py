@@ -52,10 +52,10 @@ class CMRNet_effn(nn.Module):
         # rgb shape torch.Size([24, 3, 384, 1280])
         # lidar shape torch.Size([24, 1, 384, 1280])
 
-        base_name = "tf_efficientnetv2_b0"  # convnext
+        # base_name = "tf_efficientnetv2_b0"  # convnext
 
         # tf_efficientnet_lite0
-        # base_name = 'tf_efficientnetv2_s'
+        base_name = 'tf_efficientnetv2_s'
 
         pretrain = True
         # For Camera
